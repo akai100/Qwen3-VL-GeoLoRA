@@ -7,6 +7,7 @@ from config import Config
 from data import load_datasets
 
 def load_model():
+    print("Loading model...")
     # 加载处理器（Qwen3-VL 专用， 整合图像 + 文本处理）
     processor = AutoProcessor.from_pretrained(
         Config.MODEL_NAME,
@@ -26,7 +27,7 @@ def load_model():
     model = Qwen3VLForConditionalGeneration.from_pretrained(
         Config.MODEL_NAME,
         TRUST_REMOTE_CODE=True,
-        torch_dtype=Config.TORCH_DTYPE,
+        dtype=Config.TORCH_DTYPE,
         device_map = "auto",    # ZeRO-3 会覆盖此配置，自动分片到4卡
         attn_implementation="flash_attention_2",
         cache_dir="./model_cache"
