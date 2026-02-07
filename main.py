@@ -1,11 +1,9 @@
 import os
-import torch
-from nbformat.sign import trust_flags
+os.environ["HF_ENDPOINT"]="https://hf-mirror.com"
 
-from transformers import AutoModelForCausalLM, AutoTokenizer, AutoProcessor, TrainingArguments
+from transformers import Qwen3VLForConditionalGeneration, AutoTokenizer, AutoProcessor, TrainingArguments, Trainer
 
 from config import Config
-from peft import prepare_model_for_training
 from data import load_datasets
 
 def load_model():
@@ -25,16 +23,17 @@ def load_model():
     processor.tokenizer = tokenizer
 
     # 加载全精度模型（device_map="auto" + ZeRO-3自动分片）
-    model = AutoModelForCausalLM.from_pretrained(
+    model = Qwen3VLForConditionalGeneration.from_pretrained(
         Config.MODEL_NAME,
         TRUST_REMOTE_CODE=True,
         torch_dtype=Config.TORCH_DTYPE,
         device_map = "auto",    # ZeRO-3 会覆盖此配置，自动分片到4卡
-        attn_implementation="flash_attention_2"
+        attn_implementation="flash_attention_2",
+        cache_dir="./model_cache"
     )
 
     # 为全精度训练准备模型（无需kbit预处理）
-    model = prepare_model_for_training(model)
+    # model = prepare_model_for_training(model)
 
     # 打印可训练参数（面试必提：仅 0.8%）
     model.print_trainable_parameters()

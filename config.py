@@ -2,7 +2,7 @@ import torch
 from peft import LoraConfig
 
 class Config:
-    MODEL_NAME: "Qwen/Qwen3-VL-7B-Instruct"
+    MODEL_NAME = "Qwen/Qwen3-VL-8B-Instruct"
     DATA_PATH = "./data"
     OUTPUT_DIR = "./output"
     DS_CONFIG = "./ds_config_zero3.json"
