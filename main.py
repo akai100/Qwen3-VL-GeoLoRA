@@ -12,7 +12,7 @@ def load_model():
     processor = AutoProcessor.from_pretrained(
         Config.MODEL_NAME,
         trust_remote_code=True,
-        torch_dtype=Config.TORCH_DTYPE)
+        dtype=Config.TORCH_DTYPE)
 
     # 加载 Tokenizer（设置 pad_token，企业级必备）
     tokenizer = AutoTokenizer.from_pretrained(
