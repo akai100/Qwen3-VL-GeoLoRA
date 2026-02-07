@@ -26,13 +26,13 @@ def format_geometry3k_sample(example, processor, max_length=2048):
     batch["labels"] = batch["input_ids"].clone()
     return batch
 
-def load_datasets():
+def load_datasets(processor):
     print("Loading Geometry3k dataset...")
     dataset = load_dataset("hiyouga/geometry3k", cache_dir="./data")
 
     print("Preprocessing train split...")
     train_ds = dataset["train"].map(
-        format_geometry3k_sample,
+        lambda examples: format_geometry3k_sample(examples, processor),
         remove_columns=dataset["train"].column_names,
         desc="Formatting train samples"
     )

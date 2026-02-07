@@ -41,7 +41,7 @@ def load_model():
 
 def train():
     model, processor, tokenizer = load_model()
-    train_ds, val_ds = load_datasets()
+    train_ds, val_ds = load_datasets(processor)
 
     training_args = TrainingArguments(
         output_dir=Config.OUTPUT_DIR,                             # 模型 checkpoints、日志、TensorBoard 文件的保存目录
