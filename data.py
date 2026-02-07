@@ -43,5 +43,3 @@ def load_datasets(processor):
         remove_columns=dataset["validation"].column_names,
         desc="Formatting validation samples"
     )
-
-load_datasets()   # 本地测试代码
