@@ -3,6 +3,7 @@ os.environ["HF_ENDPOINT"]="https://hf-mirror.com"
 from datasets import load_dataset
 
 def format_geometry3k_sample(example, processor, max_length=2048):
+    print("Loading data...")
     texts = []
     images = []
 
