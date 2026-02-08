@@ -41,9 +41,22 @@ def load_model():
     return model, processor, tokenizer
 
 def train():
-    model, processor, tokenizer = load_model()
-    train_ds, val_ds = load_datasets(processor)
-
+    local_rank = int(os.environ.get("LOCAL_RANK", 0))
+    world_size = int(os.environ.get("WORLD_SIZE", 1))
+    if local_rank == 0:
+        print("Rank 0: Downloading or loading model...")
+        model, processor, tokenizer = load_model()
+        train_ds, val_ds = load_datasets(processor)
+        # 下载完成后，通知其他进程
+        if world_size > 1:
+            dist.barrier()  # rank 0 到达 barrier
+    else:
+        # 其他 rank 等待 rank 0 下载完成
+        if world_size > 1:
+            dist.barrier()
+        print(f"Rank {local_rank}: Loading model from cache...")
+        model, processor, tokenizer = load_model()
+        train_ds, val_ds = load_datasets(processor)
     training_args = TrainingArguments(
         output_dir=Config.OUTPUT_DIR,                             # 模型 checkpoints、日志、TensorBoard 文件的保存目录
         per_device_train_batch_size=Config.BATCH_SIZE_PER_GPU,    # 每张 GPU 的 batch size。Qwen-VL-7B 显存大，常设为 1
