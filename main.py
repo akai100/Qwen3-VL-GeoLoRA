@@ -1,10 +1,13 @@
 import os
 os.environ["HF_ENDPOINT"]="https://hf-mirror.com"
 
+import torch.distributed as dist
 from transformers import Qwen3VLForConditionalGeneration, AutoTokenizer, AutoProcessor, TrainingArguments, Trainer
 
 from config import Config
 from data import load_datasets
+import deepspeed
+deepspeed.init_distributed()
 
 def load_model():
     print("Loading model...")
